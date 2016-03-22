@@ -6,15 +6,18 @@ This repository contains several tools to pre-process the ground truth segmentat
 		Indoor segmentation and support inference from RGBD images.
 		In Computer Vision, European Conference on, volume 7576 of Lecture Notes in Computer Science, pages 746–760. Springer Berlin Heidelberg, 2012.
 
-The code was used to evaluate several superpixel algorithms in [2]. The corresponding benchmark can be found here: [https://github.com/davidstutz/extended-berkeley-segmentation-benchmark](https://github.com/davidstutz/extended-berkeley-segmentation-benchmark).
+The code was used to evaluate several superpixel algorithms in [2] and [3]. The corresponding benchmark can be found here: [https://github.com/davidstutz/extended-berkeley-segmentation-benchmark](https://github.com/davidstutz/extended-berkeley-segmentation-benchmark).
 
 	[2] D. Stutz, A. Hermans, B. Leibe.
 		Superpixel Segmentation using Depth Information.
 		Bachelor thesis, RWTH Aachen University, Aachen, Germany, 2014.
+	[3] D. Stutz.
+		Superpixel Segmentation: An Evaluation.
+		Pattern Recognition (J. Gall, P. Gehler, B. Leibe (Eds.)), Lecture Notes in Computer Science, vol. 9358, pages 555 - 562, 2015.
 
-The code was originally written by Liefeng Bo and used in [3]:
+The code was originally written by Liefeng Bo and used in [4]:
 
-	[3] X. Ren, L. Bo.
+	[4] X. Ren, L. Bo.
 		Discriminatively trained sparse code gradients for contour detection.
 		In Advances in Neural Information Processing Systems, volume 25, pages 584–592. Curran Associates, 2012.
 
