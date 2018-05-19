@@ -35,7 +35,7 @@ function [] = convert_dataset(dir, factor)
 % Adapted by David Stutz <david.stutz@rwth-aachen.de>
 
     if nargin < 1
-        dir ='./NYUDepthV2/data'
+        dir = 'data'
     end;
 
     % Defines the factor of which the width and height of the image is
@@ -52,7 +52,7 @@ function [] = convert_dataset(dir, factor)
     load list_test.txt
 
     if generateImages
-        load ./NYUDepthV2/nyu_depth_v2_labeled.mat images
+        load nyu_depth_v2_labeled.mat images
         fprintf('Generating color images ...\n');
         generate_images(images, list_train, [dir '/images/train'], factor);
         generate_images(images, list_test, [dir '/images/test'], factor);
@@ -60,7 +60,7 @@ function [] = convert_dataset(dir, factor)
     end;
     
     if generateDepth
-        load ./NYUDepthV2/nyu_depth_v2_labeled.mat depths
+        load nyu_depth_v2_labeled.mat depths
         fprintf('Generating depth images ...\n');
         generate_depth(depths, list_train, [dir '/depth/train'], factor);
         generate_depth(depths, list_test, [dir '/depth/test'], factor);
@@ -70,7 +70,7 @@ function [] = convert_dataset(dir, factor)
     if generateGroundTruth
         % generate cleaned-up groundtruth in BSDS format
         fprintf('Generating ground truth ...\n');
-        load ./NYUDepthV2/nyu_depth_v2_labeled.mat images labels instances
+        load nyu_depth_v2_labeled.mat images labels instances
         mask_border = find_border_region(images);
         generate_groundtruth_medfilt(labels, instances, mask_border, list_train, [dir '/groundTruth/train'], factor);
         generate_groundtruth_medfilt(labels, instances, mask_border, list_test, [dir '/groundTruth/test'], factor);
@@ -173,10 +173,28 @@ function generate_depth(depths, list, outdir, factor)
     if ~exist(outdir)
         system(['mkdir -p ' outdir]);
     end;
+    
+    load nyu_depth_v2_labeled.mat labels
 
     for ii = list',
       id = num2str(ii, '%08d');
+      label = labels(:, :, ii);
       depth = depths(:, :, ii);
+      [M,N] = size(label);
+      for m = 1:M
+          if ~any(label(m,:))
+              for n = 1:N
+                  depth(m,n) = 0;
+              end
+          end
+      end
+      for n = 1:N
+          if ~any(label(:,n))
+              for m = 1:M
+                  depth(m,n) = 0;
+              end
+          end
+      end
       depth = depth(step:step:end, step:step:end);
       imwrite(uint16(depth*1000), [outdir '/' id '.png']);
     end;
