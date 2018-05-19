@@ -45,8 +45,9 @@ function [] = convert_dataset(dir, factor)
     end;
     
     generateImages = 1;
+    generateRawDepth = 0;
 	generateDepth = 1;
-	generateGroundTruth = 1;
+	generateGroundTruth = 0;
     
     load list_train.txt
     load list_test.txt
@@ -57,6 +58,14 @@ function [] = convert_dataset(dir, factor)
         generate_images(images, list_train, [dir '/images/train'], factor);
         generate_images(images, list_test, [dir '/images/test'], factor);
         clear images
+    end;
+    
+    if generateRawDepth
+        load nyu_depth_v2_labeled.mat rawDepths
+        fprintf('Generating depth images ...\n');
+        generate_depth(rawDepths, list_train, [dir '/depth/train'], factor);
+        generate_depth(rawDepths, list_test, [dir '/depth/test'], factor);
+        clear depths
     end;
     
     if generateDepth
@@ -182,15 +191,8 @@ function generate_depth(depths, list, outdir, factor)
       depth = depths(:, :, ii);
       [M,N] = size(label);
       for m = 1:M
-          if ~any(label(m,:))
-              for n = 1:N
-                  depth(m,n) = 0;
-              end
-          end
-      end
-      for n = 1:N
-          if ~any(label(:,n))
-              for m = 1:M
+          for n = 1:N
+              if label(m,n) == 0
                   depth(m,n) = 0;
               end
           end
